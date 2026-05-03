@@ -46,7 +46,14 @@ export default function Hero() {
     // Adjusted z to 3.5 so the Earth fits well with the orbital ring, but keeps the cinematic scale
     camera.position.z = 3.5; 
 
-    const loader = new THREE.TextureLoader();
+    const manager = new THREE.LoadingManager();
+    manager.onLoad = () => {
+      if (canvasRef.current) {
+        canvasRef.current.style.opacity = 1;
+      }
+    };
+
+    const loader = new THREE.TextureLoader(manager);
     const earthTexture  = loader.load('/textures/earth_atmos_2048.jpg');
     const specularMap   = loader.load('/textures/earth_specular_2048.jpg');
     const normalMap     = loader.load('/textures/earth_normal_2048.jpg');
@@ -284,7 +291,7 @@ export default function Hero() {
         
         {/* Three.js Canvas Full Screen */}
         <div className="three-wrapper" ref={threeJsWrapperRef}>
-          <canvas id="earth-canvas" ref={canvasRef} />
+          <canvas id="earth-canvas" ref={canvasRef} style={{ opacity: 0, transition: 'opacity 1.5s ease-in-out' }} />
         </div>
 
         {/* Sun Flare overlay */}
