@@ -47,10 +47,10 @@ export default function Hero() {
     camera.position.z = 3.5; 
 
     const loader = new THREE.TextureLoader();
-    const earthTexture  = loader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg');
-    const specularMap   = loader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_specular_2048.jpg');
-    const normalMap     = loader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg');
-    const cloudTexture  = loader.load('https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_clouds_1024.png');
+    const earthTexture  = loader.load('/textures/earth_atmos_2048.jpg');
+    const specularMap   = loader.load('/textures/earth_specular_2048.jpg');
+    const normalMap     = loader.load('/textures/earth_normal_2048.jpg');
+    const cloudTexture  = loader.load('/textures/earth_clouds_1024.png');
 
     // Earth
     const earthGeo = new THREE.SphereGeometry(1, 64, 64);
