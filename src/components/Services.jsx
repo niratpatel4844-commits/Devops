@@ -8,7 +8,7 @@ const SERVICES = [
     description: 'Multi-cloud architecture on AWS, GCP, and Azure — scalable, secure, and cost-optimized.',
     tags: ['AWS', 'GCP', 'Azure', 'VPC'],
     command: 'aws ec2 describe-instances',
-    statusColor: '#00E676',
+    statusColor: '#00e8ff',
     chartType: 'bar',
   },
   {
@@ -17,7 +17,7 @@ const SERVICES = [
     description: 'Automated build, test, and deploy pipelines that ship code faster with zero downtime.',
     tags: ['GitHub Actions', 'Jenkins', 'ArgoCD'],
     command: 'gh workflow run deploy.yml',
-    statusColor: '#00E676',
+    statusColor: '#00e8ff',
     chartType: 'line',
   },
   {
@@ -26,7 +26,7 @@ const SERVICES = [
     description: 'Container orchestration at scale — from dev to prod with Helm, K8s, and Docker.',
     tags: ['K8s', 'Docker', 'Helm', 'EKS'],
     command: 'kubectl apply -f deploy.yaml',
-    statusColor: '#FFD600',
+    statusColor: '#00e8ff',
     chartType: 'dots',
   },
   {
@@ -35,7 +35,7 @@ const SERVICES = [
     description: 'Full-stack observability with real-time dashboards, alerts, and log aggregation.',
     tags: ['Prometheus', 'Grafana', 'ELK', 'Datadog'],
     command: 'promql: up{job="api"}',
-    statusColor: '#00E676',
+    statusColor: '#00e8ff',
     chartType: 'wave',
   },
   {
@@ -44,7 +44,7 @@ const SERVICES = [
     description: 'Security baked into every pipeline — SAST, DAST, secrets management, and compliance.',
     tags: ['Vault', 'Trivy', 'SonarQube', 'OWASP'],
     command: 'vault kv get secret/api',
-    statusColor: '#00E676',
+    statusColor: '#00e8ff',
     chartType: 'shield',
   },
   {
@@ -53,7 +53,7 @@ const SERVICES = [
     description: 'Declarative infra with Terraform and Pulumi — version-controlled, reproducible, auditable.',
     tags: ['Terraform', 'Pulumi', 'CloudFormation'],
     command: 'terraform apply -auto-approve',
-    statusColor: '#00E676',
+    statusColor: '#00e8ff',
     chartType: 'blocks',
   },
 ];
