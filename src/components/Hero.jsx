@@ -27,7 +27,6 @@ export default function Hero() {
   const htmlOverlayRef = useRef(null);
   const atmosphereOverlayRef = useRef(null);
   const regionPanelRef = useRef(null);
-  const skipBtnRef = useRef(null);
   const scrollPromptRef = useRef(null);
   const heroHudChromeRef = useRef(null);
 
@@ -326,10 +325,19 @@ export default function Hero() {
       const w = canvas.parentElement.clientWidth;
       const h = canvas.parentElement.clientHeight;
       camera.aspect = w / h;
+      
+      if (w < 768) {
+        const baseScale = Math.max(0.4, w / 768);
+        camera.position.z = 3.5 / baseScale;
+      } else {
+        camera.position.z = 3.5;
+      }
+      
       camera.updateProjectionMatrix();
       renderer.setSize(w, h);
     };
     window.addEventListener('resize', handleResize);
+    handleResize();
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -372,7 +380,8 @@ export default function Hero() {
         threeJsWrapperRef.current.style.pointerEvents = fade <= 0 ? 'none' : 'auto';
       }
       if (htmlOverlayRef.current) {
-        htmlOverlayRef.current.style.transform = `translate(-50%, -50%) scale(${scale}) translateZ(0)`;
+        const baseS = window.innerWidth < 768 ? Math.max(0.4, window.innerWidth / 768) : 1;
+        htmlOverlayRef.current.style.transform = `translate(-50%, -50%) scale(${scale * baseS}) translateZ(0)`;
         htmlOverlayRef.current.style.opacity = fade;
       }
       if (atmosphereOverlayRef.current) {
@@ -392,10 +401,6 @@ export default function Hero() {
       const btnFade = Math.max(0, 1 - p * 2);
       if (heroHudChromeRef.current) {
         heroHudChromeRef.current.style.opacity = String(btnFade);
-      }
-      if (skipBtnRef.current) {
-        skipBtnRef.current.style.opacity = btnFade;
-        skipBtnRef.current.style.pointerEvents = btnFade > 0 ? 'auto' : 'none';
       }
       if (scrollPromptRef.current) {
         scrollPromptRef.current.style.opacity = Math.max(0, 1 - p * 4);
@@ -426,23 +431,15 @@ export default function Hero() {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
     handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
-
-  const skipToRegion = () => {
-    const scrollEl = document.getElementById('scroll-driver');
-    if (!scrollEl) return;
-    const rect = scrollEl.getBoundingClientRect();
-    window.scrollTo({
-      top: window.scrollY + rect.top + rect.height - window.innerHeight,
-      behavior: 'smooth'
-    });
-  };
 
   return (
     <section className="hero-scroll-section" id="scroll-driver">
@@ -491,10 +488,6 @@ export default function Hero() {
             </div>
           </div>
         </div>
-
-        <button ref={skipBtnRef} className="skip-btn" onClick={skipToRegion}>
-          Skip to Region ↘
-        </button>
 
         {/* HTML Overlays that scale with the Earth */}
         <div className="html-planet-container" ref={htmlOverlayRef}>
