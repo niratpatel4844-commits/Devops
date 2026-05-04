@@ -1,4 +1,4 @@
-export const CONTACT_EMAIL = 'niratpatel4844@gmail.com';
+export const CONTACT_EMAIL = 'frandinfosys@gmail.com';
 export const CONTACT_PHONE_DISPLAY = '9586781406';
 /** E.164 for tel: links (India +91) */
 export const CONTACT_PHONE_TEL = '+919586781406';
