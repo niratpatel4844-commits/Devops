@@ -36,7 +36,7 @@ export default function Hero() {
     if (!canvas) return;
 
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 0.9;
@@ -154,7 +154,7 @@ export default function Hero() {
       float fbm(vec3 p) {
         float v = 0.0;
         float a = 0.5;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
           v += a * noise(p);
           p *= 2.02;
           a *= 0.5;
@@ -164,7 +164,7 @@ export default function Hero() {
 
       void main() {
         vec3 n = normalize(vWorldNormal);
-        vec3 p = vWorldPos * 1.4 + uTime * 0.04;
+        vec3 p = vWorldPos * 1.4 + uTime * 0.015;
         float gran = fbm(p);
         float gran2 = fbm(p * 2.3 + 10.0);
         float spots = smoothstep(0.35, 0.9, gran * gran2);
@@ -262,7 +262,7 @@ export default function Hero() {
     scene.add(fillLight);
 
     // Star Field
-    const starCount = 2000;
+    const starCount = 800;
     const starGeo = new THREE.BufferGeometry();
     const positions = new Float32Array(starCount * 3);
     const sizes = new Float32Array(starCount);
@@ -310,13 +310,13 @@ export default function Hero() {
     const animate = () => {
       rafId = requestAnimationFrame(animate);
       const t = clock.getElapsedTime();
-      earth.rotation.y += 0.0003;
-      clouds.rotation.y += 0.0004;
+      earth.rotation.y += 0.0001;
+      clouds.rotation.y += 0.00015;
       sunSurfaceUniforms.uTime.value = t;
       sunSurfaceUniforms.uCameraPosition.value.copy(camera.position);
       coronaUniforms.uTime.value = t;
-      sunMesh.rotation.y = t * 0.012;
-      sunMesh.rotation.x = t * 0.006;
+      sunMesh.rotation.y = t * 0.004;
+      sunMesh.rotation.x = t * 0.002;
       renderer.render(scene, camera);
     };
     animate();
@@ -506,24 +506,25 @@ export default function Hero() {
                 </linearGradient>
               </defs>
               <ellipse cx="500" cy="170" rx="480" ry="150" fill="none" stroke="rgba(0,232,255,0.22)" strokeWidth="0.5" />
-              <ellipse cx="500" cy="170" rx="495" ry="160" fill="none" stroke="url(#ring-grad)" strokeWidth="1.5" strokeDasharray="15 10" style={{ animation: 'dashMove 20s linear infinite' }} />
+              <ellipse cx="500" cy="170" rx="495" ry="160" fill="none" stroke="url(#ring-grad)" strokeWidth="1.5" strokeDasharray="15 10" style={{ animation: 'dashMove 60s linear infinite' }} />
               <ellipse cx="500" cy="170" rx="418" ry="132" fill="none" stroke="rgba(0,232,255,0.12)" strokeWidth="0.5" />
-              <ellipse cx="500" cy="170" rx="432" ry="138" fill="none" stroke="url(#ring-grad-inner)" strokeWidth="1.2" strokeDasharray="10 14" style={{ animation: 'dashMoveReverse 26s linear infinite' }} />
+              <ellipse cx="500" cy="170" rx="432" ry="138" fill="none" stroke="url(#ring-grad-inner)" strokeWidth="1.2" strokeDasharray="10 14" style={{ animation: 'dashMoveReverse 80s linear infinite' }} />
             </svg>
           </div>
           
           <div className="satellites-container">
             <div className="satellite sat-1">
               <div className="sat-item">
-                <div className="sat-trail inactive-trail"></div>
-                <div className="sat-core inactive"></div>
-              </div>
-            </div>
-            
-            <div className="satellite sat-2">
-              <div className="sat-item">
-                <div className="sat-trail inactive-trail"></div>
-                <div className="sat-core inactive"></div>
+                <div className="sat-trail"></div>
+                <div className="sat-ping"></div>
+                <div className="sat-core"></div>
+                <div className="sat-label-container">
+                  <div className="region-label">
+                    <div className="region-dot"></div>
+                    us-east-1
+                    <span className="region-cursor">_</span>
+                  </div>
+                </div>
               </div>
             </div>
             
@@ -539,13 +540,6 @@ export default function Hero() {
                     <span className="region-cursor">_</span>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            <div className="satellite sat-4">
-              <div className="sat-item">
-                <div className="sat-trail inactive-trail"></div>
-                <div className="sat-core inactive"></div>
               </div>
             </div>
           </div>
@@ -599,8 +593,8 @@ function ServiceCard({ icon, title, desc, delay }) {
         <div className="status-dot"></div>
       </div>
       <div className="card-content">
-        <div className="card-title">{title}</div>
-        <div className="card-desc">{desc}</div>
+        <div className="card-title"><strong>{title}</strong></div>
+        <div className="card-desc"><strong>{desc}</strong></div>
       </div>
     </div>
   );
