@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { mailtoHire } from '../constants/contact';
+
 import './Navbar.css';
 
 export default function Navbar() {
@@ -42,9 +42,7 @@ export default function Navbar() {
           ))}
         </ul>
 
-        <a href={mailtoHire} className="navbar__cta btn btn-primary">
-          Hire Me
-        </a>
+
 
         <button
           className={`navbar__burger ${mobileOpen ? 'navbar__burger--open' : ''}`}
