@@ -282,15 +282,11 @@
 .region-cursor { color: var(--dawn-yellow); animation: cursorBlink 0.8s step-end infinite; }
 @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-.sat-1 { animation: orbit1 15s infinite linear; }
-.sat-2 { animation: orbit2 22s infinite linear; }
-.sat-3 { animation: orbit3 18s infinite linear; }
-.sat-4 { animation: orbit4 26s infinite linear; }
+.sat-1 { animation: orbit1 60s infinite linear; }
+.sat-3 { animation: orbit3 75s infinite linear; }
 
 @keyframes orbit1 { from { transform: rotate(0deg) translateX(490px) rotate(0deg); } to { transform: rotate(360deg) translateX(490px) rotate(-360deg); } }
-@keyframes orbit2 { from { transform: rotate(120deg) translateX(490px) rotate(-120deg); } to { transform: rotate(480deg) translateX(490px) rotate(-480deg); } }
 @keyframes orbit3 { from { transform: rotate(240deg) translateX(490px) rotate(-240deg); } to { transform: rotate(600deg) translateX(490px) rotate(-600deg); } }
-@keyframes orbit4 { from { transform: rotate(60deg) translateX(490px) rotate(-60deg); } to { transform: rotate(420deg) translateX(490px) rotate(-420deg); } }
 
 /* Scroll Prompt */
 .scroll-prompt {
@@ -342,7 +338,7 @@
 }
 
 .region-panel {
-  background: rgba(4, 14, 26, 0.9); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  background: rgba(4, 14, 26, 0.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(0,232,255,0.22); border-radius: 4px; padding: 40px;
   box-shadow: 0 30px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(0,232,255,0.06), 0 0 40px rgba(0,200,255,0.08);
   pointer-events: auto;
