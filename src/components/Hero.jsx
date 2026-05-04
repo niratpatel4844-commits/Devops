@@ -8,16 +8,16 @@ function lerp(start, end, t) {
 }
 
 function getOverlayColor(p) {
-  if (p < 0.3) {
-    const t = p / 0.3;
-    return `rgba(100,160,255,${(t * 0.3).toFixed(3)})`;
-  } else if (p < 0.6) {
-    const t = (p - 0.3) / 0.3;
-    return `rgba(${Math.round(lerp(100,251,t))},${Math.round(lerp(160,191,t))},${Math.round(lerp(255,36,t))},${lerp(0.3,0.4,t).toFixed(3)})`;
-  } else {
-    const t = (p - 0.6) / 0.4;
-    return `rgba(251,191,36,${(0.4 * (1-t)).toFixed(3)})`;
+  if (p < 0.32) {
+    const t = p / 0.32;
+    return `rgba(0, 40, 70, ${(t * 0.28).toFixed(3)})`;
   }
+  if (p < 0.62) {
+    const t = (p - 0.32) / 0.3;
+    return `rgba(${Math.round(lerp(0, 0, t))},${Math.round(lerp(60, 120, t))},${Math.round(lerp(100, 200, t))},${lerp(0.22, 0.4, t).toFixed(3)})`;
+  }
+  const t = (p - 0.62) / 0.38;
+  return `rgba(0, 232, 255, ${(0.38 * (1 - t)).toFixed(3)})`;
 }
 
 export default function Hero() {
@@ -29,6 +29,7 @@ export default function Hero() {
   const regionPanelRef = useRef(null);
   const skipBtnRef = useRef(null);
   const scrollPromptRef = useRef(null);
+  const heroHudChromeRef = useRef(null);
 
   // Three.js Setup
   useEffect(() => {
@@ -100,7 +101,7 @@ export default function Hero() {
         varying vec3 vNormal;
         void main() {
           float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
-          gl_FragColor = vec4(0.3, 0.5, 1.0, 1.0) * intensity;
+          gl_FragColor = vec4(0.12, 0.88, 1.0, 1.0) * intensity;
         }
       `,
       blending: THREE.AdditiveBlending,
@@ -110,15 +111,154 @@ export default function Hero() {
     const atmosphere = new THREE.Mesh(atmGeo, atmMat);
     scene.add(atmosphere);
 
-    // Lighting
+    // Sun (3D, procedural surface + corona — matches scene lighting direction)
+    const sunDistance = 9.5;
+    const sunDir = new THREE.Vector3(-2.5, 2.0, 1.5).normalize();
+    const sunGroup = new THREE.Group();
+    sunGroup.position.copy(sunDir.clone().multiplyScalar(sunDistance));
+
+    const sunSurfaceUniforms = {
+      uTime: { value: 0 },
+      uCameraPosition: { value: new THREE.Vector3() },
+    };
+    const sunSurfaceVertex = `
+      varying vec3 vWorldNormal;
+      varying vec3 vWorldPos;
+      void main() {
+        vec4 wPos = modelMatrix * vec4(position, 1.0);
+        vWorldPos = wPos.xyz;
+        vWorldNormal = normalize(mat3(modelMatrix) * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+    const sunSurfaceFragment = `
+      uniform float uTime;
+      uniform vec3 uCameraPosition;
+      varying vec3 vWorldNormal;
+      varying vec3 vWorldPos;
+
+      float hash(vec3 p) {
+        p = fract(p * 0.3183099 + 0.1);
+        p *= 17.0;
+        return fract(p.x * p.y * p.z * (p.x + p.y + p.z));
+      }
+      float noise(vec3 x) {
+        vec3 i = floor(x);
+        vec3 f = fract(x);
+        f = f * f * (3.0 - 2.0 * f);
+        return mix(
+          mix(mix(hash(i + vec3(0,0,0)), hash(i + vec3(1,0,0)), f.x),
+              mix(hash(i + vec3(0,1,0)), hash(i + vec3(1,1,0)), f.x), f.y),
+          mix(mix(hash(i + vec3(0,0,1)), hash(i + vec3(1,0,1)), f.x),
+              mix(hash(i + vec3(0,1,1)), hash(i + vec3(1,1,1)), f.x), f.y), f.z);
+      }
+      float fbm(vec3 p) {
+        float v = 0.0;
+        float a = 0.5;
+        for (int i = 0; i < 5; i++) {
+          v += a * noise(p);
+          p *= 2.02;
+          a *= 0.5;
+        }
+        return v;
+      }
+
+      void main() {
+        vec3 n = normalize(vWorldNormal);
+        vec3 p = vWorldPos * 1.4 + uTime * 0.04;
+        float gran = fbm(p);
+        float gran2 = fbm(p * 2.3 + 10.0);
+        float spots = smoothstep(0.35, 0.9, gran * gran2);
+
+        float lat = atan(n.z, length(n.xy)) / 3.14159;
+        float bands = sin(lat * 18.0 + uTime * 0.15) * 0.5 + 0.5;
+
+        vec3 core = vec3(1.0, 0.98, 0.92);
+        vec3 mid = vec3(1.0, 0.72, 0.28);
+        vec3 rim = vec3(0.95, 0.35, 0.08);
+        vec3 deep = vec3(0.55, 0.12, 0.02);
+
+        float t = gran * 0.55 + bands * 0.25 + spots * 0.35;
+        vec3 col = mix(deep, rim, smoothstep(0.0, 0.45, t));
+        col = mix(col, mid, smoothstep(0.25, 0.75, t));
+        col = mix(col, core, smoothstep(0.65, 1.0, t));
+
+        vec3 toCam = normalize(uCameraPosition - vWorldPos);
+        float facing = max(0.0, dot(n, toCam));
+        float hotCore = pow(facing, 5.0);
+        float limb = pow(facing, 0.45);
+        col *= mix(0.72, 1.0, limb);
+        col += vec3(1.0, 0.96, 0.88) * hotCore * 0.55;
+        col += vec3(1.0, 0.85, 0.45) * pow(facing, 12.0) * 0.35;
+
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `;
+
+    const sunGeo = new THREE.SphereGeometry(0.58, 72, 72);
+    const sunMat = new THREE.ShaderMaterial({
+      uniforms: sunSurfaceUniforms,
+      vertexShader: sunSurfaceVertex,
+      fragmentShader: sunSurfaceFragment,
+      toneMapped: false,
+    });
+    const sunMesh = new THREE.Mesh(sunGeo, sunMat);
+    sunMesh.renderOrder = 1;
+    sunGroup.add(sunMesh);
+
+    const coronaUniforms = { uTime: { value: 0 } };
+    const coronaVertex = `
+      varying vec3 vNormal;
+      void main() {
+        vNormal = normalize(normalMatrix * normal);
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `;
+    const coronaFragment = `
+      uniform float uTime;
+      varying vec3 vNormal;
+      void main() {
+        float fresnel = pow(0.62 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.2);
+        float pulse = 0.92 + 0.08 * sin(uTime * 1.2);
+        vec3 c = mix(vec3(1.0, 0.45, 0.05), vec3(1.0, 0.85, 0.35), fresnel) * fresnel * 1.35 * pulse;
+        gl_FragColor = vec4(c, fresnel * 0.55);
+      }
+    `;
+    const coronaGeo = new THREE.SphereGeometry(0.7, 48, 48);
+    const coronaMat = new THREE.ShaderMaterial({
+      uniforms: coronaUniforms,
+      vertexShader: coronaVertex,
+      fragmentShader: coronaFragment,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+      side: THREE.BackSide,
+      toneMapped: false,
+    });
+    const coronaMesh = new THREE.Mesh(coronaGeo, coronaMat);
+    coronaMesh.renderOrder = 0;
+    sunGroup.add(coronaMesh);
+
+    const sunGlowGeo = new THREE.SphereGeometry(0.82, 32, 32);
+    const sunGlowMat = new THREE.MeshBasicMaterial({
+      color: 0xffb060,
+      transparent: true,
+      opacity: 0.09,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const sunGlow = new THREE.Mesh(sunGlowGeo, sunGlowMat);
+    sunGroup.add(sunGlow);
+
+    // Lighting (keep original vector so Earth shading matches the scene)
     const sunLight = new THREE.DirectionalLight(0xffddaa, 2.2);
     sunLight.position.set(-2.5, 2.0, 1.5);
     scene.add(sunLight);
 
-    const ambient = new THREE.AmbientLight(0x220033, 0.35);
+    const ambient = new THREE.AmbientLight(0x001828, 0.42);
     scene.add(ambient);
 
-    const fillLight = new THREE.DirectionalLight(0x334488, 0.15);
+    const fillLight = new THREE.DirectionalLight(0x2266aa, 0.22);
     fillLight.position.set(3, -1, 1);
     scene.add(fillLight);
 
@@ -146,7 +286,7 @@ export default function Hero() {
         colors[i*3] = 1; colors[i*3+1] = 0.9; colors[i*3+2] = 0.6;
       } else {
         sizes[i] = 0.5 + Math.random() * 1;
-        colors[i*3] = 0.8; colors[i*3+1] = 0.85; colors[i*3+2] = 1;
+        colors[i*3] = 0.65; colors[i*3+1] = 0.88; colors[i*3+2] = 1;
       }
     }
 
@@ -164,11 +304,20 @@ export default function Hero() {
     const stars = new THREE.Points(starGeo, starMat);
     scene.add(stars);
 
+    scene.add(sunGroup);
+
     let rafId;
+    const clock = new THREE.Clock();
     const animate = () => {
       rafId = requestAnimationFrame(animate);
+      const t = clock.getElapsedTime();
       earth.rotation.y += 0.0003;
       clouds.rotation.y += 0.0004;
+      sunSurfaceUniforms.uTime.value = t;
+      sunSurfaceUniforms.uCameraPosition.value.copy(camera.position);
+      coronaUniforms.uTime.value = t;
+      sunMesh.rotation.y = t * 0.012;
+      sunMesh.rotation.x = t * 0.006;
       renderer.render(scene, camera);
     };
     animate();
@@ -194,6 +343,13 @@ export default function Hero() {
       atmMat.dispose();
       starGeo.dispose();
       starMat.dispose();
+      sunGeo.dispose();
+      sunMat.dispose();
+      coronaGeo.dispose();
+      coronaMat.dispose();
+      sunGlowGeo.dispose();
+      sunGlowMat.dispose();
+      scene.remove(sunGroup);
     };
   }, []);
 
@@ -233,8 +389,11 @@ export default function Hero() {
           regionPanelRef.current.classList.remove('cards-visible');
         }
       }
+      const btnFade = Math.max(0, 1 - p * 2);
+      if (heroHudChromeRef.current) {
+        heroHudChromeRef.current.style.opacity = String(btnFade);
+      }
       if (skipBtnRef.current) {
-        const btnFade = Math.max(0, 1 - p * 2);
         skipBtnRef.current.style.opacity = btnFade;
         skipBtnRef.current.style.pointerEvents = btnFade > 0 ? 'auto' : 'none';
       }
@@ -298,6 +457,41 @@ export default function Hero() {
         <div className="sun-flare"></div>
         <div className="flare-streak"></div>
 
+        <div className="hero-hud-chrome" ref={heroHudChromeRef} aria-hidden="true">
+          <div className="hero-hud-chrome__corners">
+            <span className="hero-hud-chrome__corner hero-hud-chrome__corner--tl" />
+            <span className="hero-hud-chrome__corner hero-hud-chrome__corner--tr" />
+            <span className="hero-hud-chrome__corner hero-hud-chrome__corner--bl" />
+            <span className="hero-hud-chrome__corner hero-hud-chrome__corner--br" />
+          </div>
+          <div className="hero-hud-chrome__rail hero-hud-chrome__rail--left" />
+          <div className="hero-hud-chrome__rail hero-hud-chrome__rail--right" />
+          <div className="hero-hud-readout hero-hud-readout--tl">
+            <div className="hero-hud-readout__line">
+              <span className="hero-hud-readout__k">UPLINK</span>
+              <span className="hero-hud-readout__v">SECURE</span>
+            </div>
+            <div className="hero-hud-readout__line">
+              <span className="hero-hud-readout__k">NODE</span>
+              <span className="hero-hud-readout__v">EARTH_ORBIT</span>
+            </div>
+            <div className="hero-hud-readout__line">
+              <span className="hero-hud-readout__k">LAYER</span>
+              <span className="hero-hud-readout__v">HOLO_01</span>
+            </div>
+          </div>
+          <div className="hero-hud-readout hero-hud-readout--br">
+            <div className="hero-hud-readout__line">
+              <span className="hero-hud-readout__k">TZ</span>
+              <span className="hero-hud-readout__v">UTC+05:30</span>
+            </div>
+            <div className="hero-hud-readout__line">
+              <span className="hero-hud-readout__k">TARGET</span>
+              <span className="hero-hud-readout__v">AP_SOUTH_1</span>
+            </div>
+          </div>
+        </div>
+
         <button ref={skipBtnRef} className="skip-btn" onClick={skipToRegion}>
           Skip to Region ↘
         </button>
@@ -308,13 +502,20 @@ export default function Hero() {
             <svg width="1000" height="340" viewBox="0 0 1000 340">
               <defs>
                 <linearGradient id="ring-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="rgba(251,191,36,0)" />
-                  <stop offset="70%" stopColor="rgba(251,191,36,0.3)" />
-                  <stop offset="100%" stopColor="rgba(251,191,36,0.8)" />
+                  <stop offset="0%" stopColor="rgba(0,232,255,0)" />
+                  <stop offset="70%" stopColor="rgba(0,232,255,0.28)" />
+                  <stop offset="100%" stopColor="rgba(0,232,255,0.85)" />
+                </linearGradient>
+                <linearGradient id="ring-grad-inner" x1="100%" y1="0%" x2="0%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(0,232,255,0)" />
+                  <stop offset="55%" stopColor="rgba(0,232,255,0.2)" />
+                  <stop offset="100%" stopColor="rgba(0,232,255,0.55)" />
                 </linearGradient>
               </defs>
-              <ellipse cx="500" cy="170" rx="480" ry="150" fill="none" stroke="rgba(251,191,36,0.2)" strokeWidth="0.5" />
-              <ellipse cx="500" cy="170" rx="495" ry="160" fill="none" stroke="url(#ring-grad)" strokeWidth="1.5" strokeDasharray="15 10" style={{animation: 'dashMove 20s linear infinite'}} />
+              <ellipse cx="500" cy="170" rx="480" ry="150" fill="none" stroke="rgba(0,232,255,0.22)" strokeWidth="0.5" />
+              <ellipse cx="500" cy="170" rx="495" ry="160" fill="none" stroke="url(#ring-grad)" strokeWidth="1.5" strokeDasharray="15 10" style={{ animation: 'dashMove 20s linear infinite' }} />
+              <ellipse cx="500" cy="170" rx="418" ry="132" fill="none" stroke="rgba(0,232,255,0.12)" strokeWidth="0.5" />
+              <ellipse cx="500" cy="170" rx="432" ry="138" fill="none" stroke="url(#ring-grad-inner)" strokeWidth="1.2" strokeDasharray="10 14" style={{ animation: 'dashMoveReverse 26s linear infinite' }} />
             </svg>
           </div>
           
@@ -358,8 +559,12 @@ export default function Hero() {
         </div>
 
         <div className="scroll-prompt" ref={scrollPromptRef}>
-          <p>SCROLL TO ENTER REGION</p>
-          <div className="bounce-arrow">↓</div>
+          <p className="scroll-prompt__text">
+            <span className="scroll-prompt__bracket" aria-hidden="true">[</span>
+            <span className="scroll-prompt__label">SCROLL TO ENTER REGION</span>
+            <span className="scroll-prompt__bracket" aria-hidden="true">]</span>
+          </p>
+          <div className="bounce-arrow" aria-hidden="true">↓</div>
         </div>
 
         <div className="atmosphere-overlay" ref={atmosphereOverlayRef}></div>

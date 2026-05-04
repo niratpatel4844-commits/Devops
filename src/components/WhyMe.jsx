@@ -2,7 +2,7 @@ import { useInView, useCountUp } from '../hooks/useAnimations';
 import './WhyMe.css';
 
 const STATS = [
-  { value: 50, suffix: '+', label: 'Projects Delivered' },
+  { value: 8, suffix: '+', label: 'Projects Delivered' },
   { value: 99.9, suffix: '%', label: 'Avg Uptime', isDecimal: true },
   { value: 40, suffix: '%', label: 'Avg Cost Saved' },
   { value: 5, suffix: '+', label: 'Years Experience' },

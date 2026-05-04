@@ -9,8 +9,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(0, 245, 212, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 245, 212, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(0, 232, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 232, 255, 0.03) 1px, transparent 1px);
   background-size: 60px 60px;
   pointer-events: none;
 }
@@ -88,8 +88,8 @@
   font-size: 0.7rem;
   font-weight: 600;
   color: var(--accent-teal);
-  background: rgba(0, 245, 212, 0.06);
-  border: 1px solid rgba(0, 245, 212, 0.15);
+  background: rgba(0, 232, 255, 0.06);
+  border: 1px solid rgba(0, 232, 255, 0.15);
   border-radius: 4px;
   padding: 3px 8px;
   text-transform: uppercase;
@@ -100,7 +100,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-size: 0.72rem;
   color: var(--text-dim);
   background: rgba(0, 0, 0, 0.25);
@@ -139,7 +139,7 @@
 
 .mini-chart__bar {
   flex: 1;
-  background: linear-gradient(to top, rgba(0, 245, 212, 0.15), rgba(0, 245, 212, 0.4));
+  background: linear-gradient(to top, rgba(0, 232, 255, 0.15), rgba(0, 232, 255, 0.4));
   border-radius: 2px 2px 0 0;
   animation: barGrow 1.5s ease forwards;
   transform-origin: bottom;
@@ -177,7 +177,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(0, 245, 212, 0.4);
+  background: rgba(0, 232, 255, 0.4);
   animation: pulse-glow 2s infinite;
 }
 
@@ -208,8 +208,8 @@
   width: 24px;
   height: 18px;
   border-radius: 3px;
-  background: rgba(0, 245, 212, 0.12);
-  border: 1px solid rgba(0, 245, 212, 0.2);
+  background: rgba(0, 232, 255, 0.12);
+  border: 1px solid rgba(0, 232, 255, 0.2);
   animation: blockPulse 2s ease infinite;
 }
 

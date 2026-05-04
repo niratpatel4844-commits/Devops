@@ -50,8 +50,8 @@
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  background: rgba(0, 245, 212, 0.04);
-  border: 1px solid rgba(0, 245, 212, 0.1);
+  background: rgba(0, 232, 255, 0.04);
+  border: 1px solid rgba(0, 232, 255, 0.1);
   border-radius: 100px;
   font-size: 0.82rem;
   font-weight: 500;
@@ -61,9 +61,9 @@
 }
 
 .tech-chip:hover {
-  background: rgba(0, 245, 212, 0.1);
+  background: rgba(0, 232, 255, 0.1);
   border-color: var(--accent-teal);
-  box-shadow: 0 0 16px rgba(0, 245, 212, 0.15);
+  box-shadow: 0 0 16px rgba(0, 232, 255, 0.15);
   transform: translateY(-2px);
 }
 

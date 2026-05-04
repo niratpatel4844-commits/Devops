@@ -5,26 +5,94 @@
 
 .footer__content {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: minmax(280px, 1.35fr) 1fr 1fr;
   gap: 48px;
   margin-bottom: 64px;
+  align-items: start;
 }
 
 .footer__brand {
-  max-width: 300px;
+  max-width: 420px;
+}
+
+.footer__logo {
+  display: inline-flex;
 }
 
 .footer__desc {
-  margin-top: 16px;
-  font-size: 0.9rem;
+  margin-top: 14px;
+  font-size: 0.95rem;
+  font-weight: 500;
   color: var(--text-muted);
-  line-height: 1.6;
+  line-height: 1.55;
+}
+
+.footer__divider {
+  margin: 22px 0 20px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 232, 255, 0.08),
+    rgba(0, 232, 255, 0.28) 40%,
+    rgba(0, 232, 255, 0.08) 100%
+  );
+  border: none;
+}
+
+.footer__contact-block {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.footer__contact-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer__contact-label {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.footer__contact-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer__contact-icon {
+  flex-shrink: 0;
+  color: var(--text-primary);
+  opacity: 0.9;
+}
+
+.footer__contact-value {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  word-break: break-all;
+  transition: color var(--transition-fast);
+}
+
+a.footer__contact-value:hover {
+  color: var(--accent-teal);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .footer__heading {
   font-family: var(--font-heading);
-  font-size: 1.1rem;
+  font-size: 0.85rem;
   font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--text-primary);
   margin-bottom: 20px;
 }
@@ -53,7 +121,10 @@
   text-align: center;
   padding-top: 32px;
   border-top: 1px solid var(--border-color);
-  font-size: 0.85rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--text-dim);
 }
 
@@ -61,5 +132,9 @@
   .footer__content {
     grid-template-columns: 1fr;
     gap: 32px;
+  }
+
+  .footer__brand {
+    max-width: none;
   }
 }

@@ -35,7 +35,7 @@
   height: 12px;
   border-radius: 50%;
   background: var(--accent-teal);
-  box-shadow: 0 0 30px 10px rgba(0, 245, 212, 0.4);
+  box-shadow: 0 0 30px 10px rgba(0, 232, 255, 0.4);
 }
 
 .scroll-transition__dot-ring {
@@ -43,20 +43,20 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid rgba(0, 245, 212, 0.5);
+  border: 1px solid rgba(0, 232, 255, 0.5);
 }
 
 .scroll-transition__dot-ring--outer {
   width: 80px;
   height: 80px;
-  border: 1px dashed rgba(0, 245, 212, 0.3);
+  border: 1px dashed rgba(0, 232, 255, 0.3);
   animation: spin 10s linear infinite;
 }
 
 .scroll-transition__dot-ring--massive {
   width: 160px;
   height: 160px;
-  border: 1px solid rgba(0, 245, 212, 0.1);
+  border: 1px solid rgba(0, 232, 255, 0.1);
 }
 
 @keyframes spin {
@@ -70,12 +70,12 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-top: 1px solid rgba(0, 245, 212, 0.2);
+  border-top: 1px solid rgba(0, 232, 255, 0.2);
   border-radius: 24px;
   padding: 40px;
   width: 90%;
   max-width: 900px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 245, 212, 0.05);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 232, 255, 0.05);
   will-change: transform, opacity, filter;
   transition: opacity 0.1s ease-out;
 }
@@ -121,11 +121,11 @@
 .scroll-transition__server-latency {
   font-size: 0.85rem;
   color: var(--accent-teal);
-  background: rgba(0, 245, 212, 0.1);
+  background: rgba(0, 232, 255, 0.1);
   padding: 6px 14px;
   border-radius: 20px;
   font-family: monospace;
-  border: 1px solid rgba(0, 245, 212, 0.2);
+  border: 1px solid rgba(0, 232, 255, 0.2);
 }
 
 .scroll-transition__grid {
@@ -143,7 +143,7 @@
   left: 5%;
   right: 5%;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(0, 245, 212, 0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0, 232, 255, 0.15), transparent);
   z-index: 0;
   pointer-events: none;
 }
@@ -163,9 +163,9 @@
 
 .scroll-transition__card:hover {
   background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(0, 245, 212, 0.3);
+  border-color: rgba(0, 232, 255, 0.3);
   transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 245, 212, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 232, 255, 0.05);
 }
 
 .scroll-transition__card-header {
@@ -178,17 +178,17 @@
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: rgba(0, 245, 212, 0.05);
+  background: rgba(0, 232, 255, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(0, 245, 212, 0.1);
+  border: 1px solid rgba(0, 232, 255, 0.1);
   transition: all 0.3s ease;
 }
 
 .scroll-transition__card:hover .scroll-transition__card-icon-wrapper {
-  background: rgba(0, 245, 212, 0.1);
-  box-shadow: 0 0 15px rgba(0, 245, 212, 0.2);
+  background: rgba(0, 232, 255, 0.1);
+  box-shadow: 0 0 15px rgba(0, 232, 255, 0.2);
 }
 
 .scroll-transition__card-icon {

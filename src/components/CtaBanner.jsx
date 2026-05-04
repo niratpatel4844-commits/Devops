@@ -1,5 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { useInView } from '../hooks/useAnimations';
+import {
+  CONTACT_EMAIL,
+  CONTACT_PHONE_DISPLAY,
+  CONTACT_PHONE_TEL,
+  mailtoInquiry,
+} from '../constants/contact';
 import './CtaBanner.css';
 
 export default function CtaBanner() {
@@ -34,7 +40,7 @@ export default function CtaBanner() {
 
     const draw = () => {
       ctx.clearRect(0, 0, width, height);
-      ctx.fillStyle = 'rgba(0, 245, 212, 0.5)';
+      ctx.fillStyle = 'rgba(0, 232, 255, 0.45)';
       
       particles.forEach(p => {
         p.x += p.vx;
@@ -66,8 +72,22 @@ export default function CtaBanner() {
       <canvas ref={canvasRef} className="cta-banner__canvas" />
       <div className={`cta-banner__content container fade-up ${isVisible ? 'visible' : ''}`}>
         <h2 className="cta-banner__title">Ready to scale your infrastructure?</h2>
-        <p className="cta-banner__subtitle">Book a free 30-minute audit. No commitment.</p>
-        <button className="btn btn-primary cta-banner__btn">Book Free Audit</button>
+        <p className="cta-banner__subtitle">
+          Share your stack and goals — I typically reply within one business day.
+        </p>
+        <div className="cta-banner__actions">
+          <a href={mailtoInquiry} className="btn btn-primary cta-banner__btn">
+            Get in touch
+          </a>
+          <a href={`tel:${CONTACT_PHONE_TEL}`} className="btn btn-ghost cta-banner__btn cta-banner__btn--secondary">
+            Call {CONTACT_PHONE_DISPLAY}
+          </a>
+        </div>
+        <p className="cta-banner__contact">
+          <a href={mailtoInquiry}>{CONTACT_EMAIL}</a>
+          <span className="cta-banner__contact-sep" aria-hidden="true">·</span>
+          <a href={`tel:${CONTACT_PHONE_TEL}`}>{CONTACT_PHONE_DISPLAY}</a>
+        </p>
       </div>
     </section>
   );
