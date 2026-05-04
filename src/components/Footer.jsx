@@ -36,13 +36,13 @@ export default function Footer() {
               </span>
             </a>
             <p className="footer__desc">
-              DevOpsX is an IT practice that specializes in cloud infrastructure, CI/CD automation, and
+              DevOpsX is an elite team of cloud experts specializing in infrastructure, CI/CD automation, and
               reliable systems at scale.
             </p>
             <div className="footer__divider" role="presentation" />
             <div className="footer__contact-block">
               <div className="footer__contact-item">
-                <div className="footer__contact-label">Mail Me:</div>
+                <div className="footer__contact-label">Email Us:</div>
                 <div className="footer__contact-line">
                   <IconMail className="footer__contact-icon" />
                   <a href={`mailto:${CONTACT_EMAIL}`} className="footer__contact-value">
@@ -51,7 +51,7 @@ export default function Footer() {
                 </div>
               </div>
               <div className="footer__contact-item">
-                <div className="footer__contact-label">Call Me Anytime:</div>
+                <div className="footer__contact-label">Call Us Anytime:</div>
                 <div className="footer__contact-line">
                   <IconPhone className="footer__contact-icon" />
                   <a href={`tel:${CONTACT_PHONE_TEL}`} className="footer__contact-value">

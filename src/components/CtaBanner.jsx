@@ -73,7 +73,7 @@ export default function CtaBanner() {
       <div className={`cta-banner__content container fade-up ${isVisible ? 'visible' : ''}`}>
         <h2 className="cta-banner__title">Ready to scale your infrastructure?</h2>
         <p className="cta-banner__subtitle">
-          Share your stack and goals — I typically reply within one business day.
+          Share your stack and goals — we typically reply within one business day.
         </p>
         <div className="cta-banner__actions">
           <a href={mailtoInquiry} className="btn btn-primary cta-banner__btn">

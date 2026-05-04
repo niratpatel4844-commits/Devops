@@ -2,17 +2,17 @@ import { useInView, useCountUp } from '../hooks/useAnimations';
 import './WhyMe.css';
 
 const STATS = [
+  { value: 6, suffix: '+', label: 'Cloud Experts' },
   { value: 20, suffix: '+', label: 'Projects Delivered' },
   { value: 99.9, suffix: '%', label: 'Avg Uptime', isDecimal: true },
   { value: 40, suffix: '%', label: 'Avg Cost Saved' },
-  { value: 5, suffix: '+', label: 'Years Experience' },
 ];
 
 const VALUE_PROPS = [
   {
     icon: '⚡',
     title: 'Ship Faster',
-    description: 'Automated pipelines cut deployment time from hours to minutes.',
+    description: 'Our automated pipelines cut deployment time from hours to minutes.',
   },
   {
     icon: '💰',
@@ -56,10 +56,10 @@ export default function WhyMe() {
     <section className="why-me section-padding" id="why-me">
       <div className="container">
         <div className={`fade-up ${isVisible ? 'visible' : ''}`} ref={ref}>
-          <div className="section-label">Why Me</div>
+          <div className="section-label">Why Us</div>
           <h2 className="section-title">Metrics That Matter</h2>
           <p className="section-subtitle">
-            Real results from real infrastructure — measured, monitored, and optimized.
+            Real results from real infrastructure — measured, monitored, and optimized by our elite team.
           </p>
         </div>
 
@@ -90,7 +90,7 @@ export default function WhyMe() {
           className={`why-me__process fade-up ${processVisible ? 'visible' : ''}`}
           ref={processRef}
         >
-          <h3 className="why-me__process-title">How I Work</h3>
+          <h3 className="why-me__process-title">How We Work</h3>
           <div className="why-me__timeline">
             {PROCESS_STEPS.map((step, i) => (
               <div

@@ -35,7 +35,7 @@ export default function Testimonials() {
           <div className="section-label">Testimonials</div>
           <h2 className="section-title">Client Reviews</h2>
           <p className="section-subtitle">
-            What teams say after working with me on their infrastructure.
+            What teams say after working with us on their infrastructure.
           </p>
         </div>
 
