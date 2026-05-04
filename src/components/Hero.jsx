@@ -371,8 +371,8 @@ export default function Hero() {
     const applyProgress = (p) => {
       const scale = 1 + p * 9;
       const fade = Math.max(0, 1 - p * 2.2);
-      const panelOpacity = Math.max(0, (p - 0.55) * 4);
-      const panelY = Math.max(0, (1 - (p - 0.55) * 4)) * 40;
+      const panelOpacity = Math.max(0, (p - 0.45) * 2.5);
+      const panelY = Math.max(0, (1 - (p - 0.45) * 2.5)) * 40;
       
       if (threeJsWrapperRef.current) {
         threeJsWrapperRef.current.style.transform = `scale(${scale}) translateZ(0)`;
@@ -392,7 +392,7 @@ export default function Hero() {
         regionPanelRef.current.style.transform = `translateY(${panelY}px) translateZ(0)`;
         regionPanelRef.current.style.pointerEvents = panelOpacity > 0.5 ? 'auto' : 'none';
         
-        if (panelOpacity > 0.8) {
+        if (panelOpacity > 0.5) {
           regionPanelRef.current.classList.add('cards-visible');
         } else {
           regionPanelRef.current.classList.remove('cards-visible');
